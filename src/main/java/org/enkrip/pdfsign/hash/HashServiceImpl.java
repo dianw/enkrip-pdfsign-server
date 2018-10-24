@@ -3,6 +3,8 @@ package org.enkrip.pdfsign.hash;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bouncycastle.util.encoders.Hex;
 import org.enkrip.pdfsign.PdfSignServerApplication;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 class HashServiceImpl implements HashService {
+	private final Set<String> fileCache = ConcurrentHashMap.newKeySet();
 	private final PdfSignServerApplication.PDFSignProperties pdfSignProperties;
 
 	public HashServiceImpl(PdfSignServerApplication.PDFSignProperties pdfSignProperties) {

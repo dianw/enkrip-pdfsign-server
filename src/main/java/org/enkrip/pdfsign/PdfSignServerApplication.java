@@ -19,6 +19,7 @@ public class PdfSignServerApplication {
 
 	public static class PDFSignProperties {
 		private String defaultHashAlg = "SHA-256";
+		private String storageLocation = "file:./target/pdf";
 
 		public String getDefaultHashAlg() {
 			return defaultHashAlg;
@@ -26,6 +27,14 @@ public class PdfSignServerApplication {
 
 		public void setDefaultHashAlg(String defaultHashAlg) {
 			this.defaultHashAlg = defaultHashAlg;
+		}
+
+		public String getStorageLocation() {
+			return storageLocation;
+		}
+
+		public void setStorageLocation(String storageLocation) {
+			this.storageLocation = storageLocation;
 		}
 	}
 }
