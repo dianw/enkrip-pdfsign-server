@@ -1,4 +1,4 @@
-package org.enkrip.pdfsign.pdf;
+package org.enkrip.pdfsign.storage;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,12 +11,12 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 @Service
-class FileServiceImpl implements FileService {
+class StorageServiceImpl implements StorageService {
 	private final HashService hashService;
 	private final File saveDirectory;
 
-	FileServiceImpl(PdfSignServerApplication.PDFSignProperties pdfSignProperties, ResourceLoader resourceLoader,
-					HashService hashService) throws IOException {
+	StorageServiceImpl(PdfSignServerApplication.PDFSignProperties pdfSignProperties, ResourceLoader resourceLoader,
+					   HashService hashService) throws IOException {
 		this.hashService = hashService;
 		this.saveDirectory = resourceLoader.getResource(pdfSignProperties.getStorageLocation()).getFile();
 		if (!this.saveDirectory.exists()) {

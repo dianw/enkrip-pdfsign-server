@@ -1,9 +1,11 @@
-package org.enkrip.pdfsign.pdf;
+package org.enkrip.pdfsign.storage;
 
 import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
+import org.enkrip.pdfsign.hash.HashRestData;
+import org.enkrip.pdfsign.hash.ImmutableHashRestData;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,10 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/pdf")
-public class PDFRestController {
-	private final FileService fileService;
+public class StorageRestController {
+	private final StorageService fileService;
 
-	public PDFRestController(FileService fileService) {
+	public StorageRestController(StorageService fileService) {
 		this.fileService = fileService;
 	}
 
@@ -31,15 +33,16 @@ public class PDFRestController {
 	}
 
 	@GetMapping(path = "/{hash}")
-	public ResponseEntity<byte[]> getPdf(@PathVariable("hash") String hash) {
+	public ResponseEntity<byte[]> getFile(@PathVariable("hash") String hash) {
 		return fileService.getFile(hash)
 				.map(this::fileToByteArray)
 				.map(ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF)::body)
 				.orElse(ResponseEntity.notFound().build());
 	}
 
-	@PutMapping(consumes = MediaType.APPLICATION_PDF_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
-	public String uploadPdf(@RequestBody byte[] pdf) throws IOException {
-		return fileService.saveFile(pdf);
+	@PutMapping(consumes = MediaType.APPLICATION_PDF_VALUE)
+	public HashRestData uploadFile(@RequestBody byte[] pdf) throws IOException {
+		String hash = fileService.saveFile(pdf);
+		return ImmutableHashRestData.builder().hash(hash).build();
 	}
 }

@@ -8,15 +8,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/hash")
-public class HashRestController {
+class HashRestController {
 	private final HashService hashService;
 
 	public HashRestController(HashService hashService) {
 		this.hashService = hashService;
 	}
 
-	@PutMapping(consumes = MediaType.APPLICATION_PDF_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
-	public String hash(@RequestBody byte[] bytes) {
-		return hashService.hash(bytes);
+	@PutMapping(consumes = MediaType.APPLICATION_PDF_VALUE)
+	public HashRestData hash(@RequestBody byte[] bytes) {
+		return ImmutableHashRestData.builder()
+				.hash(hashService.hash(bytes))
+				.build();
 	}
 }
