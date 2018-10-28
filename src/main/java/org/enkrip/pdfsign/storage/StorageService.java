@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.util.Optional;
 
 public interface StorageService {
-	String saveFile(byte[] bytes) throws IOException;
+	String generateHash(byte[] bytes);
 
 	Optional<File> getFile(String hash);
+
+	String saveFile(byte[] bytes) throws IOException;
 }
