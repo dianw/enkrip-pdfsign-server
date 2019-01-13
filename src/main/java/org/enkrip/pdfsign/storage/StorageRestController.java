@@ -39,7 +39,7 @@ public class StorageRestController {
 	}
 
 	@PutMapping(consumes = MediaType.APPLICATION_PDF_VALUE)
-	public HashRestData uploadFile(@RequestBody byte[] pdf) throws IOException {
+	public HashRestData uploadFile(@RequestBody byte[] pdf) {
 		String hash = fileService.saveFile(pdf);
 		return ImmutableHashRestData.builder().hash(hash).build();
 	}

@@ -9,6 +9,7 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.enkrip.pdfsign.PdfSignServerApplication;
+import org.jooq.lambda.Unchecked;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
@@ -35,14 +36,16 @@ class StorageServiceImpl implements StorageService {
 	}
 
 	@Override
-	public String saveFile(byte[] bytes) throws IOException {
+	public String saveFile(byte[] bytes) {
 		String hash = DigestUtils.sha256Hex(bytes);
-		if (getFile(hash).isPresent())
-			return hash;
-		File newFile = new File(saveDirectory, hash);
-		if (newFile.createNewFile()) {
-			FileUtils.writeByteArrayToFile(newFile, bytes);
-		}
-		return hash;
+		return getFile(hash)
+			.map(file -> hash)
+			.orElseGet(Unchecked.supplier(() -> {
+				File newFile = new File(saveDirectory, hash);
+				if (newFile.createNewFile()) {
+					FileUtils.writeByteArrayToFile(newFile, bytes);
+				}
+				return hash;
+			}));
 	}
 }
